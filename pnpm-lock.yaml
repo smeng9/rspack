@@ -153,30 +153,6 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
-  npm/darwin-arm64: {}
-
-  npm/darwin-x64: {}
-
-  npm/linux-arm64-gnu: {}
-
-  npm/linux-arm64-musl: {}
-
-  npm/linux-x64-gnu: {}
-
-  npm/linux-x64-musl: {}
-
-  npm/wasm32-wasi:
-    dependencies:
-      '@napi-rs/wasm-runtime':
-        specifier: 1.0.7
-        version: 1.0.7
-
-  npm/win32-arm64-msvc: {}
-
-  npm/win32-ia32-msvc: {}
-
-  npm/win32-x64-msvc: {}
-
   packages/create-rspack:
     dependencies:
       create-rstack:
