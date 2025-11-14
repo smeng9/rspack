@@ -5,7 +5,7 @@ var __webpack_modules__ = ({
 /*!****************************!*\
   !*** ./bar.js + 1 modules ***!
   \****************************/
-(function () {
+(() => {
 
 ;// CONCATENATED MODULE: external "externals0"
 
@@ -18,7 +18,7 @@ __WEBPACK_EXTERNAL_MODULE_externals0__.v;
 /*!******************!*\
   !*** ./entry.js ***!
   \******************/
-(function (module, __unused_webpack_exports, __webpack_require__) {
+((module, __unused_webpack_exports, __webpack_require__) => {
 module.exports.entry1 = __webpack_require__(/*! ./entry1.js */ "./entry1.js")
 module.exports.entry2 = __webpack_require__(/*! ./entry2.js */ "./entry2.js")
 
@@ -27,7 +27,7 @@ module.exports.entry2 = __webpack_require__(/*! ./entry2.js */ "./entry2.js")
 /*!*******************!*\
   !*** ./entry1.js ***!
   \*******************/
-(function (module, __unused_webpack_exports, __webpack_require__) {
+((module, __unused_webpack_exports, __webpack_require__) => {
 module.exports = __webpack_require__(/*! ./foo */ "./foo.js")
 module.exports.name = "entry1"
 
@@ -36,7 +36,7 @@ module.exports.name = "entry1"
 /*!*******************!*\
   !*** ./entry2.js ***!
   \*******************/
-(function (module, __unused_webpack_exports, __webpack_require__) {
+((module, __unused_webpack_exports, __webpack_require__) => {
 module.exports = __webpack_require__(/*! ./bar */ "./bar.js")
 module.exports.name = "entry2"
 
@@ -45,7 +45,7 @@ module.exports.name = "entry2"
 /*!****************************!*\
   !*** ./foo.js + 1 modules ***!
   \****************************/
-(function () {
+(() => {
 
 ;// CONCATENATED MODULE: external "externals1"
 

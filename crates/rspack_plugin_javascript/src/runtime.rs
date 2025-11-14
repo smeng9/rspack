@@ -211,11 +211,20 @@ pub async fn render_module(
       }
 
       let mut container_sources = ConcatSource::default();
+      let supports_arrow_function = compilation
+        .options
+        .output
+        .environment
+        .supports_arrow_function();
 
-      container_sources.add(RawStringSource::from(format!(
-        "(function ({}) {{\n",
-        args.join(", ")
-      )));
+      let function_header = if supports_arrow_function {
+        format!("(({}) => {{\n", args.join(", "))
+      } else {
+        format!("(function ({}) {{\n", args.join(", "))
+      };
+
+      container_sources.add(RawStringSource::from(function_header));
+
       if module.build_info().strict && !all_strict {
         container_sources.add(RawStringSource::from_static("\"use strict\";\n"));
       }

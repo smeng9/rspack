@@ -1,6 +1,6 @@
 ```js title=main.js
 (self["webpackChunkwebpack"] = self["webpackChunkwebpack"] || []).push([["main"], {
-"./index.js": (function () {
+"./index.js": (() => {
 if (true) {
   const hasConsole = typeof console !== 'undefined';
   const warn = (msg) => {

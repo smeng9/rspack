@@ -1,7 +1,7 @@
 ```js title=main.js
 "use strict";
 (self["webpackChunkwebpack"] = self["webpackChunkwebpack"] || []).push([["main"], {
-"../node_modules/pmodule/a.js": (function (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+"../node_modules/pmodule/a.js": ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 __webpack_require__.d(__webpack_exports__, {
   a: () => (a)
 });
@@ -17,7 +17,7 @@ var c = "c";
 
 
 }),
-"../node_modules/pmodule/b.js": (function (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+"../node_modules/pmodule/b.js": ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 __webpack_require__.d(__webpack_exports__, {
   x: () => (x)
 });
@@ -33,7 +33,7 @@ var y = "y";
 
 
 }),
-"../node_modules/pmodule/c.js": (function (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+"../node_modules/pmodule/c.js": ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 __webpack_require__.d(__webpack_exports__, {
   z: () => (z)
 });
@@ -47,7 +47,7 @@ var z = "z";
 
 
 }),
-"../node_modules/pmodule/index.js": (function (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+"../node_modules/pmodule/index.js": ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 __webpack_require__.d(__webpack_exports__, {
   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 });
@@ -62,7 +62,7 @@ __webpack_require__.d(__webpack_exports__, {
 
 
 }),
-"../node_modules/pmodule/tracker.js": (function (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+"../node_modules/pmodule/tracker.js": ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 __webpack_require__.d(__webpack_exports__, {
   log: () => (log),
   track: () => (track)
@@ -80,7 +80,7 @@ function reset() {
 
 
 }),
-"./index.js": (function (__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) {
+"./index.js": ((__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) => {
 /* import */var pmodule_tracker__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__("../node_modules/pmodule/tracker.js");
 /* import */var pmodule__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("../node_modules/pmodule/a.js");
 /* import */var pmodule__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__("../node_modules/pmodule/b.js");

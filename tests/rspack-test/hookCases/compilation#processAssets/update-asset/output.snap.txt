@@ -1,8 +1,8 @@
-```js title=main.c34b4be3af721682.js
+```js title=main.6dd7fcde3ff27560.js
 // UPDATED
 (() => {
 var __webpack_modules__ = ({
-402: (function (module) {
+402: ((module) => {
 module.exports = "This is hook"
 
 

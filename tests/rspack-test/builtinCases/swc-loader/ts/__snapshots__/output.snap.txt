@@ -1,6 +1,6 @@
 ```js title=main.js
 (self["webpackChunkwebpack"] = self["webpackChunkwebpack"] || []).push([["main"], {
-"./index.tsx": (function () {
+"./index.tsx": (() => {
 class a {
 }
 function A() {

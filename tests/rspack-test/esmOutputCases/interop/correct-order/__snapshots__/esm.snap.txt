@@ -5,7 +5,7 @@ __webpack_require__.add({
 /*!*****************!*\
   !*** ./bar.cjs ***!
   \*****************/
-(function (module) {
+((module) => {
 module.exports = 'bar'
 globalThis.testValue = 'bar';
 
@@ -15,7 +15,7 @@ globalThis.testValue = 'bar';
 /*!*****************!*\
   !*** ./foo.cjs ***!
   \*****************/
-(function (module) {
+((module) => {
 module.exports = 'foo'
 globalThis.testValue = 'foo';
 

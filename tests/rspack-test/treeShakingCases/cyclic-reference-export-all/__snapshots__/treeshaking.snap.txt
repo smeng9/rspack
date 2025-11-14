@@ -1,7 +1,7 @@
 ```js title=main.js
 "use strict";
 (self["webpackChunkwebpack"] = self["webpackChunkwebpack"] || []).push([["main"], {
-"./src/App.js": (function (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+"./src/App.js": ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 __webpack_require__.d(__webpack_exports__, {
   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 });
@@ -18,7 +18,7 @@ const Index = () => {
 
 
 }),
-"./src/containers/containers.js": (function (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+"./src/containers/containers.js": ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 __webpack_require__.d(__webpack_exports__, {
   PlatformProvider: () => (/* reexport safe */ _platform_container__WEBPACK_IMPORTED_MODULE_0__.PlatformProvider)
 });
@@ -29,7 +29,7 @@ __webpack_require__.d(__webpack_exports__, {
 
 
 }),
-"./src/containers/platform-container/index.js": (function (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+"./src/containers/platform-container/index.js": ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 __webpack_require__.d(__webpack_exports__, {
   PlatformProvider: () => (PlatformProvider)
 });
@@ -38,7 +38,7 @@ const PlatformProvider = 1000;
 
 
 }),
-"./src/index.js": (function (__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) {
+"./src/index.js": ((__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) => {
 /* import */var _App__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("./src/App.js");
 
 
