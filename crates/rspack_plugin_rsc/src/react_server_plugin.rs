@@ -783,19 +783,19 @@ impl ReactServerPlugin {
       .insert(entry_name.to_string(), client_browser_loader);
     // }
 
-    let client_component_ssr_entry_dep = EntryDependency::new(
+    let ssr_entry_dependency = EntryDependency::new(
       client_server_loader.to_string(),
       compilation.options.context.clone(),
       Some(LAYERS_NAMES.server_side_rendering.to_string()),
       false,
     );
-    let ssr_dependency_id = *(client_component_ssr_entry_dep.id());
+    let ssr_dependency_id = *(ssr_entry_dependency.id());
 
     InjectedClientEntry {
       runtime,
       // should_invalidate,
       add_ssr_entry: (
-        Box::new(client_component_ssr_entry_dep),
+        Box::new(ssr_entry_dependency),
         EntryOptions {
           name: Some(entry_name.to_string()),
           ..Default::default()

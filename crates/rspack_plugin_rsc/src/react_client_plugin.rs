@@ -12,7 +12,7 @@ use rustc_hash::FxHashSet;
 use crate::{
   constants::REGEX_CSS,
   plugin_state::{PLUGIN_STATE_BY_COMPILER_ID, PluginState},
-  reference_manifest::{CrossOriginMode, ManifestExport},
+  reference_manifest::{CrossOriginMode, ManifestExport, ModuleLoading},
   utils::GetServerCompilerId,
 };
 
@@ -67,6 +67,7 @@ fn record_module(
     let Some(chunk) = compilation.chunk_by_ukey.get(chunk_ukey) else {
       return;
     };
+    // TODO: server entry 的 resource id 需要处理，现在是写死的
     let css_files = plugin_state
       .entry_css_files
       .entry(
@@ -201,9 +202,25 @@ impl ReactClientPlugin {
     compilation: &Compilation,
     plugin_state: &mut PluginState,
   ) -> Result<()> {
+    let public_path = &compilation.options.output.public_path;
     let configured_cross_origin_loading = &compilation.options.output.cross_origin_loading;
 
-    let cross_origin_mode: Option<CrossOriginMode> = match configured_cross_origin_loading {
+    let prefix = match public_path {
+      rspack_core::PublicPath::Filename(filename) => match filename.template() {
+        Some(template) => {
+          // TODO: 只能是纯字符串，模版也不行
+          template.to_string()
+        }
+        None => {
+          return Err(rspack_error::error!(
+            "Expected Rspack publicPath to be a string when using React Server Components."
+          ));
+        }
+      },
+      rspack_core::PublicPath::Auto => "/".to_string(),
+    };
+
+    let cross_origin: Option<CrossOriginMode> = match configured_cross_origin_loading {
       CrossOriginLoading::Enable(value) => {
         if value == "use-credentials" {
           Some(CrossOriginMode::UseCredentials)
@@ -213,6 +230,11 @@ impl ReactClientPlugin {
       }
       _ => None,
     };
+
+    plugin_state.module_loading = Some(ModuleLoading {
+      prefix,
+      cross_origin,
+    });
 
     let mut client_reference_modules: FxHashSet<ModuleIdentifier> = Default::default();
     let module_graph = compilation.get_module_graph();
