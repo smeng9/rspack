@@ -38,6 +38,13 @@ impl DiskWatcher {
             return; // Ignore events with no paths
           }
 
+          if paths
+            .iter()
+            .any(|p| p.to_string_lossy().contains("chunk-ids/update-module"))
+          {
+            println!("pathes: {:?}", paths.iter().collect::<Vec<_>>());
+            println!("event kind: {:?}", &event.kind);
+          }
           let kind = match event.kind {
             EventKind::Create(_) => FsEventKind::Create,
             EventKind::Modify(
