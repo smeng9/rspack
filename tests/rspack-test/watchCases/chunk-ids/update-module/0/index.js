@@ -26,7 +26,13 @@ it("should have correct log when incremental enabled", async () => {
         expect(content).toContain("6 chunks are updated by set_chunk_id, with 1 chunks using name as id, and 0 unnamed chunks");
         break;
       case "1":
-        expect(content).toContain("2 chunks are updated by set_chunk_id, with 1 chunks using name as id, and 0 unnamed chunks");
+        try {
+          expect(content).toContain("2 chunks are updated by set_chunk_id, with 1 chunks using name as id, and 0 unnamed chunks");
+        } catch (e) {
+          console.error("WATCH_STEP: ", WATCH_STEP);
+          console.error("statsString: ", statsString);
+          throw e;
+        }
         break;
     }
   }
