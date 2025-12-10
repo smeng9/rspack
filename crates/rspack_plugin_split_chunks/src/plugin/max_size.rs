@@ -7,8 +7,8 @@
  * Copyright (c) JS Foundation and other contributors
  * https://github.com/webpack/webpack/blob/main/LICENSE
  */
-use std::sync::LazyLock;
-use std::{borrow::Cow, hash::Hash};
+use std::hash::Hasher;
+use std::{borrow::Cow, hash::Hash, sync::LazyLock};
 
 use regex::Regex;
 use rspack_collections::{DatabaseItem, UkeyMap};
@@ -19,7 +19,7 @@ use rspack_core::{
 use rspack_error::{Result, ToStringResultToRspackResultExt};
 use rspack_hash::{RspackHash, RspackHashDigest};
 use rspack_util::identifier::make_paths_relative;
-use rustc_hash::FxHashSet;
+use rustc_hash::{FxHashSet, FxHasher};
 
 use super::MaxSizeSetting;
 use crate::{SplitChunkSizes, SplitChunksPlugin};
@@ -50,6 +50,20 @@ impl Group {
       key,
       similarities,
     }
+  }
+
+  /// Generate a stable key based on all module identifiers in the group.
+  /// This ensures deterministic chunk naming during HMR by not relying on
+  /// the order of modules or the first module's key.
+  ///
+  /// Note: This assumes nodes are already sorted by key (they always are in this algorithm,
+  /// as initial_nodes is sorted and all subsequent operations preserve relative order).
+  fn generate_stable_key(&self) -> String {
+    let mut hasher = FxHasher::default();
+    for key in self.nodes.iter().map(|n| n.key.as_str()) {
+      key.hash(&mut hasher);
+    }
+    format!("{:x}", hasher.finish())
   }
 
   fn pop_nodes(&mut self, filter: impl Fn(&GroupItem) -> bool) -> Option<Vec<GroupItem>> {
@@ -279,17 +293,22 @@ fn deterministic_grouping_for_modules(
     .chunk_graph
     .get_chunk_modules(chunk, &module_graph);
 
-  let nodes = items.into_iter().map(|module| {
-    let module: &dyn Module = module.as_ref();
+  let mut nodes = items
+    .into_iter()
+    .map(|module| {
+      let module: &dyn Module = module.as_ref();
 
-    GroupItem {
-      module: module.identifier(),
-      size: get_size(module, compilation),
-      key: get_key(module, delimiter, compilation),
-    }
-  });
+      GroupItem {
+        module: module.identifier(),
+        size: get_size(module, compilation),
+        key: get_key(module, delimiter, compilation),
+      }
+    })
+    .collect::<Vec<_>>();
 
-  let mut initial_nodes = nodes
+  nodes.sort_by(|a, b| a.key.cmp(&b.key));
+
+  let initial_nodes = nodes
     .into_iter()
     .filter_map(|node| {
       // The Module itself is already bigger than `allow_max_size`, we will create a chunk
@@ -311,7 +330,6 @@ fn deterministic_grouping_for_modules(
     .collect::<Vec<_>>();
 
   if !initial_nodes.is_empty() {
-    initial_nodes.sort_by(|a, b| a.key.cmp(&b.key));
     let similarities = get_similarities(&initial_nodes);
     let initial_group = Group::new(initial_nodes, None, similarities);
 
@@ -374,7 +392,8 @@ fn deterministic_grouping_for_modules(
           continue;
         }
 
-        group.key = group.nodes.first().map(|n| n.key.clone());
+        // Use stable key based on all modules instead of just the first one
+        group.key = Some(group.generate_stable_key());
         results.push(group);
         continue;
       } else {
@@ -432,8 +451,19 @@ fn deterministic_grouping_for_modules(
     }
   }
 
-  // lexically ordering
-  results.sort_unstable_by(|a, b| a.nodes[0].key.cmp(&b.nodes[0].key));
+  // Assign stable keys to groups that don't have one
+  for group in &mut results {
+    if group.key.is_none() {
+      group.key = Some(group.generate_stable_key());
+    }
+  }
+
+  // lexically ordering by stable key
+  results.sort_unstable_by(|a, b| {
+    let a_key = a.key.as_deref().expect("key generated");
+    let b_key = b.key.as_deref().expect("key generated");
+    a_key.cmp(b_key)
+  });
 
   results
 }
