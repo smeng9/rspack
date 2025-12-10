@@ -108,6 +108,13 @@ export default class NativeWatchFileSystem implements WatchFileSystem {
 					callback(err, new Map(), new Map(), new Set(), new Set());
 					return;
 				}
+
+				if (
+					Array.from(files).some(i => i.includes("chunk-ids/update-module"))
+				) {
+					console.error("changed files:", result.changedFiles);
+					console.error("removed files:", result.removedFiles);
+				}
 				nativeWatcher.pause();
 				const changedFiles = result.changedFiles;
 				const removedFiles = result.removedFiles;
