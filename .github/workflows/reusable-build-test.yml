@@ -127,6 +127,10 @@ jobs:
             pnpm run test:ci
           fi
 
+      - name: Debug apple-darwin
+        if: ${{ contains(inputs.target, 'apple-darwin') }}
+        uses: ./.github/actions/debugger/action.yml
+
       ### x86_64-pc-windows-msvc
       - name: Test x86_64-pc-windows-msvc
         timeout-minutes: 10

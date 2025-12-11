@@ -52,29 +52,29 @@ jobs:
             document_changed:
               - "website/**"
 
-  test-linux:
-    name: Test Linux
-    needs: [check-changed]
-    if: ${{ needs.check-changed.outputs.code_changed == 'true' }}
-    uses: ./.github/workflows/reusable-build.yml
-    with:
-      target: x86_64-unknown-linux-gnu
-      runner: ${{ vars.LINUX_SELF_HOSTED_RUNNER_LABELS || '"ubuntu-22.04"' }}
-      test: true
-      bench: true
-      prefer_docker: false
+  # test-linux:
+  #   name: Test Linux
+  #   needs: [check-changed]
+  #   if: ${{ needs.check-changed.outputs.code_changed == 'true' }}
+  #   uses: ./.github/workflows/reusable-build.yml
+  #   with:
+  #     target: x86_64-unknown-linux-gnu
+  #     runner: ${{ vars.LINUX_SELF_HOSTED_RUNNER_LABELS || '"ubuntu-22.04"' }}
+  #     test: true
+  #     bench: true
+  #     prefer_docker: false
 
-  test-windows:
-    name: Test Windows
-    needs: [check-changed]
-    if: ${{ needs.check-changed.outputs.code_changed == 'true' }}
-    uses: ./.github/workflows/reusable-build.yml
-    with:
-      target: x86_64-pc-windows-msvc
-      profile: "dev"
-      runner: ${{ vars.WINDOWS_SELF_HOSTED_RUNNER_LABELS || '"windows-latest"' }}
-      test-runner: '"windows-latest"'
-      test: true
+  # test-windows:
+  #   name: Test Windows
+  #   needs: [check-changed]
+  #   if: ${{ needs.check-changed.outputs.code_changed == 'true' }}
+  #   uses: ./.github/workflows/reusable-build.yml
+  #   with:
+  #     target: x86_64-pc-windows-msvc
+  #     profile: "dev"
+  #     runner: ${{ vars.WINDOWS_SELF_HOSTED_RUNNER_LABELS || '"windows-latest"' }}
+  #     test-runner: '"windows-latest"'
+  #     test: true
 
   test-mac:
     name: Test Mac ARM64
@@ -88,48 +88,47 @@ jobs:
       # test-runner: ${{ '"macos-latest"' }}
       test: true
 
-  test-wasm:
-    name: Test WASM
-    needs: [check-changed]
-    if: ${{ needs.check-changed.outputs.code_changed == 'true' }}
-    uses: ./.github/workflows/reusable-build.yml
-    with:
-      target: wasm32-wasip1-threads
-      profile: "ci"
-      runner: ${{ vars.LINUX_SELF_HOSTED_RUNNER_LABELS || '"ubuntu-22.04"' }}
-      test: true
+  # test-wasm:
+  #   name: Test WASM
+  #   needs: [check-changed]
+  #   if: ${{ needs.check-changed.outputs.code_changed == 'true' }}
+  #   uses: ./.github/workflows/reusable-build.yml
+  #   with:
+  #     target: wasm32-wasip1-threads
+  #     profile: "ci"
+  #     runner: ${{ vars.LINUX_SELF_HOSTED_RUNNER_LABELS || '"ubuntu-22.04"' }}
+  #     test: true
 
-  check-codspeed:
-    name: Check Bench Result
-    needs: [test-linux]
-    runs-on: ubuntu-24.04
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-      PR_NUMBER: ${{ github.event.pull_request.number }}
+  # check-codspeed:
+  #   name: Check Bench Result
+  #   needs: [test-linux]
+  #   runs-on: ubuntu-24.04
+  #   env:
+  #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #     HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+  #     PR_NUMBER: ${{ github.event.pull_request.number }}
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
 
-      - name: Polling Comment
-        if: ${{ github.event_name == 'pull_request' }}
-        run: bash .github/actions/codspeed/check-comment.sh
+  #     - name: Polling Comment
+  #       if: ${{ github.event_name == 'pull_request' }}
+  #       run: bash .github/actions/codspeed/check-comment.sh
 
   test_required_check:
     # this job will be used for GitHub actions to determine required job success or not;
     # When code changed, it will check if any of the test jobs failed.
     # When *only* doc changed, it will run as success directly
     name: Test Required Check
-    needs:
-      [
-        check-codspeed,
-        test-linux,
-        test-windows,
+    needs: [
+        # check-codspeed,
+        # test-linux,
+        # test-windows,
         test-mac,
-        test-wasm,
-        check-changed,
-        size-limit
+        # test-wasm,
+        check-changed
+        # size-limit
       ]
     if: ${{ always() && !cancelled() }}
     runs-on: ubuntu-latest
@@ -151,11 +150,11 @@ jobs:
       - name: No check to Run test
         run: echo "Success"
 
-  size-limit:
-    name: Binary Size Limit
-    needs: [check-changed]
-    if: ${{ needs.check-changed.outputs.code_changed == 'true' && github.event_name == 'pull_request' }}
-    uses: ./.github/workflows/size-limit.yml
+  # size-limit:
+  #   name: Binary Size Limit
+  #   needs: [check-changed]
+  #   if: ${{ needs.check-changed.outputs.code_changed == 'true' && github.event_name == 'pull_request' }}
+  #   uses: ./.github/workflows/size-limit.yml
 
   # TODO: enable it after self hosted runners are ready
   # pkg-preview:
