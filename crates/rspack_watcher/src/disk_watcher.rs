@@ -117,6 +117,11 @@ impl DiskWatcher {
       }
 
       if let Some(watcher) = &mut self.inner {
+        println!(
+          "notify watching: {:?}, mode: {:?}",
+          pattern.path.to_string_lossy(),
+          pattern.mode
+        );
         watcher
           .watch(&pattern.path, pattern.mode)
           .map_err(|e| rspack_error::error!(e.to_string()))?;
